@@ -1,0 +1,33 @@
+service:
+  name: Spring Boot Hello World
+  identifier: spring_boot_hello_world
+  orgIdentifier: sandbox
+  projectIdentifier: soto_sandbox
+  serviceDefinition:
+    type: Kubernetes
+    spec:
+      artifacts:
+        primary:
+          primaryArtifactRef: dockerhub
+          sources:
+            - identifier: dockerhub
+              type: DockerRegistry
+              spec:
+                connectorRef: dockerhubalexsotoharness
+                imagePath: alexsotoharness/spring-boot-hello-world
+                tag: <+input>
+      manifests:
+        - manifest:
+            identifier: k8s_manifests
+            type: K8sManifest
+            spec:
+              store:
+                type: Github
+                spec:
+                  connectorRef: alexsotoharness
+                  repoName: alexsoto-harness/spring-boot-hello-world
+                  gitFetchType: Branch
+                  branch: main
+                  paths:
+                    - k8s
+              skipResourceVersioning: false

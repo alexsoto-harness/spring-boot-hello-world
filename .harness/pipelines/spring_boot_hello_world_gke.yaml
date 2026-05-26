@@ -1,0 +1,98 @@
+pipeline:
+  name: Spring Boot Hello World
+  identifier: spring_boot_hello_world_gke
+  projectIdentifier: soto_sandbox
+  orgIdentifier: sandbox
+  tags: {}
+  variables:
+    - name: IMAGE_TAG
+      type: String
+      description: Image tag used for build + deploy
+      value: <+codebase.shortCommitSha>-<+pipeline.sequenceId>
+  properties:
+    ci:
+      codebase:
+        connectorRef: alexsotoharness
+        repoName: alexsoto-harness/spring-boot-hello-world
+        build:
+          type: branch
+          spec:
+            branch: main
+  stages:
+    - stage:
+        name: Build and Push
+        identifier: build_and_push
+        type: CI
+        spec:
+          cloneCodebase: true
+          platform:
+            os: Linux
+            arch: Amd64
+          runtime:
+            type: Cloud
+            spec: {}
+          execution:
+            steps:
+              - step:
+                  name: Maven Package
+                  identifier: maven_package
+                  type: Run
+                  spec:
+                    shell: Sh
+                    command: mvn -B -DskipTests clean package
+              - step:
+                  name: Build and Push Image
+                  identifier: build_and_push_image
+                  type: BuildAndPushDockerRegistry
+                  spec:
+                    connectorRef: dockerhubalexsotoharness
+                    repo: alexsotoharness/spring-boot-hello-world
+                    tags:
+                      - <+pipeline.variables.IMAGE_TAG>
+        failureStrategies:
+          - onFailure:
+              errors:
+                - AllErrors
+              action:
+                type: MarkAsFailure
+
+    - stage:
+        name: Deploy to Dev GKE
+        identifier: deploy_to_dev_gke
+        type: Deployment
+        spec:
+          deploymentType: Kubernetes
+          service:
+            serviceRef: spring_boot_hello_world
+            serviceInputs:
+              serviceDefinition:
+                type: Kubernetes
+                spec:
+                  artifacts:
+                    primary:
+                      primaryArtifactRef: dockerhub
+                      sources:
+                        - identifier: dockerhub
+                          type: DockerRegistry
+                          spec:
+                            tag: <+pipeline.variables.IMAGE_TAG>
+          environment:
+            environmentRef: Dev
+            deployToAll: false
+            infrastructureDefinitions:
+              - identifier: gke_sandbox_dev
+          execution:
+            steps:
+              - step:
+                  name: Rolling Deploy
+                  identifier: rolling_deploy
+                  type: K8sRollingDeploy
+                  timeout: 10m
+                  spec:
+                    skipDryRun: false
+        failureStrategies:
+          - onFailure:
+              errors:
+                - AllErrors
+              action:
+                type: StageRollback
