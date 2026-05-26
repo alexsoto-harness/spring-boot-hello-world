@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: <+artifact.image>
+          image: alexsotoharness/spring-boot-hello-world:<+pipeline.variables.IMAGE_TAG>
           imagePullPolicy: Always
           ports:
             - name: http

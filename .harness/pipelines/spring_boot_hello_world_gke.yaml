@@ -8,12 +8,12 @@ pipeline:
     - name: IMAGE_TAG
       type: String
       description: Image tag used for build + deploy
-      value: <+codebase.shortCommitSha>-<+pipeline.sequenceId>
+      value: <+codebase.shortCommitSha>
   properties:
     ci:
       codebase:
         connectorRef: alexsotoharness
-        repoName: alexsoto-harness/spring-boot-hello-world
+        repoName: spring-boot-hello-world
         build:
           type: branch
           spec:
@@ -75,6 +75,8 @@ pipeline:
                         - identifier: dockerhub
                           type: DockerRegistry
                           spec:
+                            connectorRef: dockerhubalexsotoharness
+                            imagePath: alexsotoharness/spring-boot-hello-world
                             tag: <+pipeline.variables.IMAGE_TAG>
           environment:
             environmentRef: Dev
