@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: spring-boot-hello-world
+  name: {{ .Values.name }}
   labels:
-    app: spring-boot-hello-world
+    app: {{ .Values.name }}
 spec:
-  replicas: 2
+  replicas: {{ .Values.replicas | default 2 }}
   selector:
     matchLabels:
-      app: spring-boot-hello-world
+      app: {{ .Values.name }}
   template:
     metadata:
       labels:
-        app: spring-boot-hello-world
+        app: {{ .Values.name }}
     spec:
       containers:
         - name: app
-          image: alexsotoharness/spring-boot-hello-world:<+pipeline.variables.IMAGE_TAG>
+          image: {{ .Values.image | quote }}
           imagePullPolicy: Always
           ports:
             - name: http
