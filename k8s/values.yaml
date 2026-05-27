@@ -1,5 +1,6 @@
 name: spring-boot-hello-world
 replicas: 2
 
-# Harness substitutes this when processing valuesPaths before Helm render
+# Harness substitutes these when processing valuesPaths before Helm render
 image: <+artifact.image>
+forceRedeploy: <+pipeline.executionId>
