@@ -1,6 +1,6 @@
 # Spring Boot Hello World
 
-A sample Spring Boot app for demonstrating Harness CD deployments (ASG Blue-Green, Lambda Canary, EKS, GKE, Cloud Run).
+A sample Spring Boot app for demonstrating Harness CD deployments (ASG Blue-Green, Lambda Canary, EKS, GKE, Cloud Run)
 
 ---
 
