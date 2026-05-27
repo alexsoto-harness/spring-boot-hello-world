@@ -1,0 +1,30 @@
+# CODEOWNERS — https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+#
+# CIS Supply Chain 1.1.6: repositories should define code owners for review on pull requests.
+# Update handles below to match your GitHub users or teams (e.g. @your-org/platform-team).
+
+# Default owner for all files
+* @alexsoto-harness
+
+# Application
+/src/ @alexsoto-harness
+/pom.xml @alexsoto-harness
+/sonar-project.properties @alexsoto-harness
+
+# Containers
+/Dockerfile @alexsoto-harness
+/Dockerfile.lambda @alexsoto-harness
+/.dockerignore @alexsoto-harness
+
+# CI/CD and Harness pipelines
+/.github/ @alexsoto-harness
+/.harness/ @alexsoto-harness
+
+# Infrastructure and deployment
+/infra/ @alexsoto-harness
+/k8s/ @alexsoto-harness
+/*.sh @alexsoto-harness
+
+# Service catalog and docs
+/catalog-info.yml @alexsoto-harness
+/docs/ @alexsoto-harness
