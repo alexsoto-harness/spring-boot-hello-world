@@ -13,6 +13,8 @@ spec:
     metadata:
       labels:
         app: {{ .Values.name }}
+      annotations:
+        harness.io/force-redeploy: "<+pipeline.executionId>"
     spec:
       containers:
         - name: app
